@@ -1,1 +1,1 @@
-# KP_Go
+# Konzepte Programmiersprachen Go Assignments
