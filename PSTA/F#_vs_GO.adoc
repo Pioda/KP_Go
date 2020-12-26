@@ -36,7 +36,7 @@ Sidebars contain aside text and are subject to normal substitutions.
 ____
 Functional programming (often abbreviated FP) is the process of building software by composing pure functions, avoiding shared state, mutable data, and side-effects. Functional programming is declarative rather than imperative, and application state flows through pure functions. Contrast with object oriented programming, where application state is usually shared and colocated with methods in objects. paragraph.footnote:[https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0]
 ____
-Functional programming heavily differs from object orientation in Java or C#. 
+Functional programming heavily differs from object orientation in Java or C#. As it is summarized in above statement functional programming trades shared state in instantiated objects for the pure composition of pure functions. With functional programming the developer describes a set of functions that can be invoked when supplying certain input. Functional programming code tends to be more readable, easier to test and has a higher predicatbility than OO or procedural developed code. Newcomers originating from OO or procedural programming languages often struggle to get started with FP because of the mindset and common patterns associated with it. 
 
 == GO programming language
 === General
