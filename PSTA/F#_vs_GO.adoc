@@ -1,6 +1,6 @@
 = F# vs GO -  Functional Programming
 Daniel Piotrowski <piodan@gmx.net>
-0.2, December 21, 2020, Asciidoctor 1.5 article template
+0.3, December 21, 2020, Asciidoctor 1.5 article template
 :toc:
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
@@ -36,7 +36,24 @@ Sidebars contain aside text and are subject to normal substitutions.
 ____
 Functional programming (often abbreviated FP) is the process of building software by composing pure functions, avoiding shared state, mutable data, and side-effects. Functional programming is declarative rather than imperative, and application state flows through pure functions. Contrast with object oriented programming, where application state is usually shared and colocated with methods in objects. paragraph.footnote:[https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0]
 ____
-Functional programming heavily differs from object orientation in Java or C#. As it is summarized in above statement functional programming trades shared state in instantiated objects for the pure composition of pure functions. With functional programming the developer describes a set of functions that can be invoked when supplying certain input. Functional programming code tends to be more readable, easier to test and has a higher predicatbility than OO or procedural developed code. Newcomers originating from OO or procedural programming languages often struggle to get started with FP because of the mindset and common patterns associated with it. 
+
+=== Basics of functional programming
+
+Functional programming heavily differs from object orientation in Java or C#. As it is summarized in above statement, functional programming trades shared state in instantiated objects for the composition of pure functions. With functional programming the developer describes a set of functions that can be invoked when supplying certain input. The design of those is similiar to the concept of mathematical functions, which use conditionals and recursion to perform computation. Functional programming code tends to be more readable, easier to test and has a higher predicatbility than OO or procedural developed code. In compination with the missing shared state, it also tends to be less buggy, because without state there can't be sideffects from an inconsisten state. Newcomers originating from OO or procedural programming languages often struggle to get started with FP because of the mindset and common patterns associated with it which differ vastly from those in OOP for example.
+
+FP languages can be divided into two segments:
+
+* Pure Functional languages, which only support the functional paradgims (i.e. no state).
+* Impure Functional languages, which grant the possibility to use other OO or procedural related concepts.
+
+=== Functional languages ruleset
+
+As with any programming paradigm, branding a certain ruleset on it is rather difficult. Over time some rules arose that FP languages and programmers __should__ follow to stick as close as possible to the paradigms paragraph.footnote:[https://thecodeboss.dev/2016/12/core-functional-programming-concepts/]
+
+. Functions are pure, meaning that everytime the function gets called, with identical input, it produces the same output and does not inflict side effects (i.e. altering/creating state).
+. Functions are first class and higher order. First class roughly means that a variable can be assigned a function. This in combination with 'higher order' imposes that functions can be arguments/input parameters to other functions.
+. Variables should be immutable. Once a variable gets created and assigned, its value should never change again. Operations altering variable state should result in an assignment to a __new__ variable.
+. Any function should be __referential transparent__. This means that any occurance of a call to a function __method(5)__ can be replaced with the returned value of said method without changing the programs behaviour and state. 
 
 == GO programming language
 === General
@@ -46,6 +63,19 @@ Heavily influenced by the programming language _C_, Go delivers procedural progr
 On the following pages this article will be focusing on the functional programming aspects. 
 
 === Functional Programming in GO
+Since functional programming in __Go__ is neither the only nor the main aspect, it belongs to the **Impure Functional languages**. Further, it wasn't designed to be a functional programming language. This is easily spotted by the absence of builtin functions 'Map', 'Filter' and 'Reduce'. To be fair, they can be easily implemented using Gos functional aspects but aren't part of the main framework. Being an impure functional language also means that it doesn't enforce the rules stated in <<Functional languages ruleset>>. For example it is perfectly fine in go to write following code:
+[source, go]
+----
+name_string := "Daniel"
+name_string := name_string + "Piotrowski"
+----
+For this to be more in line with the functional paradigms it should be rewritten in:
+[source, go]
+----
+first_name := "Daniel"
+last_name := "Piotrowski"
+full_name := first_name + " " + last_name
+----
 
 == F# programming language
 === General
