@@ -1,6 +1,6 @@
 = F# vs GO -  Functional Programming
 Daniel Piotrowski <piodan@gmx.net>
-0.3, December 21, 2020, Asciidoctor 1.5 article template
+0.4, December 21, 2020, Asciidoctor 1.5 article template
 :toc:
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
@@ -63,7 +63,7 @@ Heavily influenced by the programming language _C_, Go delivers procedural progr
 On the following pages this article will be focusing on the functional programming aspects. 
 
 === Functional Programming in GO
-Since functional programming in __Go__ is neither the only nor the main aspect, it belongs to the **Impure Functional languages**. Further, it wasn't designed to be a functional programming language. This is easily spotted by the absence of builtin functions 'Map', 'Filter' and 'Reduce'. To be fair, they can be easily implemented using Gos functional aspects but aren't part of the main framework. Being an impure functional language also means that it doesn't enforce the rules stated in <<Functional languages ruleset>>. For example it is perfectly fine in go to write following code:
+Since functional programming in __Go__ is neither the only nor the main aspect, it belongs to the **Impure Functional languages**. Further, it wasn't designed to be a functional programming language. This is easily spotted by the absence of builtin functions like 'Map', 'Filter' and 'Reduce'. To be fair, they can be easily implemented using Gos functional aspects but aren't part of the main framework. Being an impure functional language also means that it doesn't enforce the rules stated in <<Functional languages ruleset>>. For example it is perfectly fine in go to write following code:
 [source, go]
 ----
 name_string := "Daniel"
@@ -76,6 +76,129 @@ first_name := "Daniel"
 last_name := "Piotrowski"
 full_name := first_name + " " + last_name
 ----
+In the first example the state of the __name_string__ variable changes multiple times where as in the second every variable is treated as immutable and therefor adherent to the FP paradigms.
+
+==== First-class and higher-order
+In Go every function can be stored into a variable and passed to a function as input. For example this can be used to create filter method for an array of integers.
+[source, go]
+----
+func filter(input []int, filterFunction func(int) bool)(ret []int){
+	for _, i := range input{
+		if filterFunction(i){
+			ret = append(ret, i)
+		}
+	}
+	return
+}
+----
+This function takes an array of integers and a function as input. Next it applies the input function on every index of the input array, if the condition returns true, it appends to the return array. With this we can create filter methods for even and odd numbers.
+[source, go]
+----
+odd_func := func(i int) bool {return i%2 == 1}
+even_func := func(i int) bool {return i%2 == 0}
+----
+With these two we can now filter an array in integers.
+[source, go]
+----
+package main
+
+import "fmt"
+
+func main() {
+	input := []int{1,2,3,4,5,6,7}
+	odd_func := func(i int) bool {return i%2 == 1}
+	even_func := func(i int) bool {return i%2 == 0}
+
+	fmt.Println(filter(input, odd_func)) // returns [1 3 5 7]
+	fmt.Println(filter(input, even_func)) // returns [2 4 6]
+}
+
+func filter(input []int, filterFunction func(int) bool)(ret []int){
+	for _, i := range input{
+		if filterFunction(i){
+			ret = append(ret, i)
+		}
+	}
+	return
+}
+----
+As a side-note the __filter__ function is pure, as it does not depend on external/global state, references, etc. It only takes the inputs and creates something new (a new array) with them and returns it.
+
+==== Recursion
+Typically a pure FP language, like Haskell, favors recursion over looping. As Golang is an impure FP language, one can do an iterative or a recursive approach to solve loop-scenarios.
+[source, go]
+----
+func fib_it(n int) int{
+	a := 0
+	b := 1
+	for i := 0; i < n; i++ {
+		temp := a
+        a = b
+        b = temp + a
+	}
+	return a
+}
+----
+In this code example we have calculated the n'th fibonacci number using a loop-iterative approach. For recursion, this can written down into:
+[source, go]
+----
+func fib_rec(n int) int{
+	if n == 0 || n == 1{
+		return n
+	} else{
+		return fib_rec(n-1) + fib_rec(n-2)
+	} 
+}
+----
+
+==== Currying, Composition and Closure
+
+A closure is a function (called parent-function) that takes input parameters and returns another function (called child-function). During the execution of the parent-function local state of variables can be bound into returned child-function. These bounded variables can be accessed to through the closures copies or references to the value. Golang supports the use of Closures:
+[source, go]
+----
+func counter_closure(n int) func() int {
+	counter:= 0
+	return func() int{
+		counter += n
+		return counter
+	}
+}
+
+counterIncrease3 := counter_closure(3) // counter is 0
+counterIncrease3() // counter is 3
+counterIncrease3() // counter is 6
+----
+Here the enclosing function and the anonymous return function share the local state of the variable __counter__, hence the __counterIncrease3__ method can be created to increase __counter__ by 3 every time it is called.
+
+The technique of Currying is splitting a single function that takes a multiple number of arguments into multiple functions that take a single argument, but are called in sequence for computation. In Go it can be achieved simply by expanding the Closure return function to accept an additional parameter.
+[source, go]
+----
+func add(n, i int) int {
+    return n + i
+}
+func curried_add(n int) func(int) int {
+	return func(i int) int{
+		 return n + i
+	}
+}
+add(5,3) // returns 8
+curried_add(5)(3) // returns 8
+----
+
+Composition is the act of composing multiple functions into a single function with a single return value. With Closures and Currying this can be easily achieved.
+[source, go]
+----
+func mult(a int) func(int) int{
+	return func(i int) int{
+		return a * i
+	}
+}
+pow := func(i int) int {return mult(i)(i)} 
+pow(3) // returns 9
+---- 
+
+
+
 
 == F# programming language
 === General
