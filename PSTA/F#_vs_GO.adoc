@@ -198,9 +198,29 @@ pow(3) // returns 9
 ---- 
 
 
-
-
 == F# programming language
+
+[quote, F#.org]
+____
+F# is a strongly-typed, functional-first programming language for writing simple code to solve complex problems. From the business perspective, the primary role of F# is to reduce the time-to-deployment for robust software in the modern enterprise and web applications. paragraph.footnote:[https://fsharp.org/about/]
+____
+
+F# ([ɛfː ʃɑrp]) is a "functional-first" Functional Programming language designed, developed and maintained by Microsoft. It first released in 2002 and has since been part of Microsofts .NET Framework which F# gets developed alongside with. Currently (31.12.2020) it shares the same major version as the new .NET Framework (5). 
+
 === General
+Being heavily influenced by Objective CAML, C# and Haskell, the F# language is not a pure functional language, but in comparison to Golang it __was__ designed to be a functional language on top of the .NET Framework. Additional to the functional aspects, F# also allows for object oriented and imperative programming (i.e. for/while-loops). This allows for a full interoperability with Microsofts allaround object oriented C# programming language which preceeds F# by one year.
+
 === Functional programming in F#
+
+Functional programming in F# can easily started by creating a new console application with Microsofts Visual Studio IDE. Taking a lot from OCAML, F# syntax introduces recursive functions by using the keyword __rec__ infront of the functions name. Another example of syntax familarities is __match ... with ...__ which allows for implementing switch-case scenarios.
+
+[source, f#]
+----
+let rec test n =
+    match n with
+    | 0 -> 1
+    | x -> n + test (n-1)
+----
+
+
 == Comparison F# and Golang
