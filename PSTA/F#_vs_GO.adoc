@@ -1,36 +1,12 @@
 = F# vs GO -  Functional Programming
 Daniel Piotrowski <piodan@gmx.net>
-0.4, December 21, 2020, Asciidoctor 1.5 article template
+0.5, December 21, 2020, Asciidoctor 1.5 article template
 :toc:
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
 
 This article aims to compare the functional programming aspects of GOLang, which is currently maintained by Google, with Microsofts OCaml based functional programming language F#. It is written as a exam study paper, handed in and presented to fellow students and examiners as a fair and honest view on both programming languages. 
 
-////
-.Image caption
-image::image-file-name.png[I am the image alt text.]
-
-This is another paragraph.footnote:[I am footnote text and will be displayed at the bottom of the article.]
-.Unordered list title
-* list item 1
-** nested list item
-*** nested nested list item 1
-*** nested nested list item 2
-* list item 2
-
-This is a paragraph.
-
-.Example block title
-====
-Content in an example block is subject to normal substitutions.
-====
-
-.Sidebar title
-****
-Sidebars contain aside text and are subject to normal substitutions.
-****
-////
 == Functional programming
 [quote, Eric Elliot]
 ____
@@ -57,7 +33,11 @@ As with any programming paradigm, branding a certain ruleset on it is rather dif
 
 == GO programming language
 === General
-The Golang programming language first got presented by Rob Pike at Google around 2009, with it's first stable release following three years later in 2012. It got created as a response to Javas or C++ inadequacies and suitability for scaling cloudcomputing services. As a programming language it builds on simplicity, safety, fast compilation and execution (i.e. _Gofast_), builtin concurrency and a toolchain that produces statically linked native binaries.
+[quote, Wikipedia]
+____
+Go is a statically typed, compiled programming language designed at Google by Robert Griesemer, Rob Pike, and Ken Thompson. Go is syntactically similar to C, but with memory safety, garbage collection, structural typing, and CSP-style concurrency.
+____
+The Go programming language first got presented by Rob Pike at Google around 2009, with it's first stable release following three years later in 2012. It got created as a response to Javas or C++ inadequacies and suitability for scaling cloudcomputing services.
 
 Heavily influenced by the programming language _C_, Go delivers procedural programming features, object orientation and functional programming.  
 On the following pages this article will be focusing on the functional programming aspects. 
@@ -168,6 +148,7 @@ counterIncrease3 := counter_closure(3) // counter is 0
 counterIncrease3() // counter is 3
 counterIncrease3() // counter is 6
 ----
+
 Here the enclosing function and the anonymous return function share the local state of the variable __counter__, hence the __counterIncrease3__ method can be created to increase __counter__ by 3 every time it is called.
 
 The technique of Currying is splitting a single function that takes a multiple number of arguments into multiple functions that take a single argument, but are called in sequence for computation. In Go it can be achieved simply by expanding the Closure return function to accept an additional parameter.
@@ -195,7 +176,7 @@ func mult(a int) func(int) int{
 }
 pow := func(i int) int {return mult(i)(i)} 
 pow(3) // returns 9
----- 
+----
 
 
 == F# programming language
@@ -222,5 +203,86 @@ let rec test n =
     | x -> n + test (n-1)
 ----
 
+F# is more in line with the <<Functional languages ruleset>> as it introduces scope based variable imutability. On a module level, a __let__ declaritive must be unique, in a function scope multiple let assignments of the same variable name are allowed, however omitting the __let__-keyword produces an error since by default, all variables in F# are immutable.
+[source, f#]
+----
+// ex1:
+let test1 = 5
+let test1 = 7 // produces a compilation error 
+//-----------\\
+// ex2:
+let test1 = 5
+let f x = 
+	let test1 = 2 // in function scope -> okay
+	test1 = 7 // error, variable is immutable
+	let test1 = 8 // technically okay, inside a function, doesn't make sense
+	test1 * x // 8 * x
+----
 
+While applying __ex2__ the declaration of the last let assignment of__test1__ inside the __f-function__ hides the value of all previous (same and outer scope) of the __test1__ variable. Since F# provides OO features, imutability becomes unhandy when dealing with objects. F# offers the keyword __mutable__. Using this allows the programmer to change the value of a already defined variable. So rewriting the the ex2 of the previous code snippet:
+[source, f#]
+----
+let f x = 
+	let mutable test1 = 2 
+	test1 <- 7 // variable is mutable
+	test1 * x // 7 * x
+----
+
+=== First-class
+Being a "functional-first" language, F# functions are both first-class citizens and of higher order. This means functions are treated as values and can thus be given to other functions as arguments.
+[source, f#] 
+----
+let f x = x + 2
+let g f x = 2 * f (x)
+----
+
+=== Recursion 
+Similiar to Go, F# offers the possibility to solve problems iterative and recursive. Thus implementing the calculation of fibonacci numbers can take 2 forms.
+[source, f#]
+----
+// iterative
+let fib_iter n = 
+    let mutable a = 0
+    let mutable b = 1
+    for i in 0 .. n-1 do
+        let temp = a
+        a <- b
+        b <- temp + a
+    printfn "%i" a
+
+// recursive
+let rec fib_rec n = // recursive functions need to be declared with the 'rec' keyword
+    match n with
+    | 0 | 1 -> n
+    | x -> fib_rec (x-1) + fib_rec (x-2)
+----
+
+=== Closures, Composition and Currying
+Close to what Go offers, F# can produce function Closures, Composition and Currying as well.
+[source, f#]
+----
+// ----- Closure
+let closure n =
+    let mutable c = 0
+    fun () -> (
+        c <- c + n
+        c
+    )
+let closure2 = closure (2)
+printfn "%i" (closure2 ()) // prints 2
+printfn "%i" (closure2 ()) // prints 4
+
+// ----- Currying
+let curried_add n = 
+    fun c -> c + n 
+printfn "%i" (curried (5) (4)) // prints 9
+
+// ----- Composition
+let pow n = n * n
+let negate n = n * -1
+let pn = pow >> negate
+let np = negate >> pow
+printfn "%i" (np 3) // prints 9
+printfn "%i" (pn 3) // prints -9
+----
 == Comparison F# and Golang
