@@ -228,7 +228,7 @@ let f x =
 	test1 * x // 7 * x
 ----
 
-=== First-class
+==== First-class
 Being a "functional-first" language, F# functions are both first-class citizens and of higher order. This means functions are treated as values and can thus be given to other functions as arguments.
 [source, f#] 
 ----
@@ -236,7 +236,7 @@ let f x = x + 2
 let g f x = 2 * f (x)
 ----
 
-=== Recursion 
+==== Recursion 
 Similiar to Go, F# offers the possibility to solve problems iterative and recursive. Thus implementing the calculation of fibonacci numbers can take 2 forms.
 [source, f#]
 ----
@@ -257,7 +257,7 @@ let rec fib_rec n = // recursive functions need to be declared with the 'rec' ke
     | x -> fib_rec (x-1) + fib_rec (x-2)
 ----
 
-=== Closures, Composition and Currying
+==== Closures, Composition and Currying
 Close to what Go offers, F# can produce function Closures, Composition and Currying as well.
 [source, f#]
 ----
