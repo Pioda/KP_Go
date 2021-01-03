@@ -1,6 +1,6 @@
 = F# vs GO -  Functional Programming
 Daniel Piotrowski <piodan@gmx.net>
-0.5, December 21, 2020, Asciidoctor 1.5 article template
+1.0, December 21, 2020, Asciidoctor 1.5 article template
 :toc:
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
@@ -285,4 +285,24 @@ let np = negate >> pow
 printfn "%i" (np 3) // prints 9
 printfn "%i" (pn 3) // prints -9
 ----
-== Comparison F# and Golang
+== Comparison F# and Go
+As the previous chapters show, functional programming idioms can be uphold to a certain degree with F# and Go. Nonetheless as stated by before, Go was not designed to be a functional language whereas F# was specifically created to give .NET developers a functional programming language. Compared to the ruleset provided in <<Functional languages ruleset>> F# is closer to being a **pure** functional language than Go is. This becomes more obvious by examining the given code examples. 
+
+Although both languages share a lot of similiarities, writing functional code feels more 'natural' in F# than in Go. This is mainly due to the reason that in Go you __have to__ specify return types like `func add(a, b int) int {...}` or `func anonFunc (a int) func (int) int {...}`. In F# on the other side you __can__ specify input and output types. As a result the functional code written is much more readable.
+
+As in terms of more simiarities the following table <<_table-comp,F# vs Go>>
+
+.F# vs Go
+[cols="^,^,^"]
+|===
+|Feature | F# | Go
+
+|Garbage Collector| icon:check[] | icon:check[]
+|Native executables| icon:check[] | icon:check[]
+|Cross plattform| icon:check[] (given .NET Core only the runtime is needed on machine) | icon:check[] (needs to be target compiled)
+|Module based| icon:check[]|icon:check[]
+|Access control| functions top-level are public by default, can be marked `private, internal` | depends on capitalized letter `func Function` -> public `func function` -> private
+| Typesystem | strong, nominal, with static typechecking | strong, structural, with static typechecking
+|===
+
+As a conclusion, both languages offer a similiar featureset, a rich base framework and a large community to support development. For functional programming F# takes the edge as its specific design to be a functional language makes it feel more suitable for purely functional scenarios.
