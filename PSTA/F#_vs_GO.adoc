@@ -1,6 +1,6 @@
 = F# vs GO -  Functional Programming
 Daniel Piotrowski <piodan@gmx.net>
-1.0, December 21, 2020, Asciidoctor 1.5 article template
+1.1, December 21, 2020, Asciidoctor 1.5 article template
 :toc:
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
@@ -122,7 +122,7 @@ func fib_it(n int) int{
 In this code example we have calculated the n'th fibonacci number using a loop-iterative approach. For recursion, this can written down into:
 [source, go]
 ----
-func fib_rec(n int) int{
+func fib_rec(n int) int{ // note: do not run for higher than 40. It *will* take ages...
 	if n == 0 || n == 1{
 		return n
 	} else{
@@ -133,7 +133,7 @@ func fib_rec(n int) int{
 
 ==== Currying, Composition and Closure
 
-A closure is a function (called parent-function) that takes input parameters and returns another function (called child-function). During the execution of the parent-function local state of variables can be bound into returned child-function. These bounded variables can be accessed to through the closures copies or references to the value. Golang supports the use of Closures:
+A closure is a function (called parent-function) that takes input parameters and returns another function (called child-function). During the execution of the parent-function local state of variables can be bound into returned child-function. These bounded variables can be accessed through the closures copies or references to the value. Golang supports the use of Closures:
 [source, go]
 ----
 func counter_closure(n int) func() int {
@@ -151,7 +151,7 @@ counterIncrease3() // counter is 6
 
 Here the enclosing function and the anonymous return function share the local state of the variable __counter__, hence the __counterIncrease3__ method can be created to increase __counter__ by 3 every time it is called.
 
-The technique of Currying is splitting a single function that takes a multiple number of arguments into multiple functions that take a single argument, but are called in sequence for computation. In Go it can be achieved simply by expanding the Closure return function to accept an additional parameter.
+The technique of Currying is splitting a single function that takes a number of arguments into multiple functions that take a single argument, but are called in sequence for computation. In Go it can be achieved simply by expanding the Closure return function to accept an additional parameter.
 [source, go]
 ----
 func add(n, i int) int {
@@ -189,11 +189,11 @@ ____
 F# ([ɛfː ʃɑrp]) is a "functional-first" Functional Programming language designed, developed and maintained by Microsoft. It first released in 2002 and has since been part of Microsofts .NET Framework which F# gets developed alongside with. Currently (31.12.2020) it shares the same major version as the new .NET Framework (5). 
 
 === General
-Being heavily influenced by Objective CAML, C# and Haskell, the F# language is not a pure functional language, but in comparison to Golang it __was__ designed to be a functional language on top of the .NET Framework. Additional to the functional aspects, F# also allows for object oriented and imperative programming (i.e. for/while-loops). This allows for a full interoperability with Microsofts allaround object oriented C# programming language which preceeds F# by one year.
+Being heavily influenced by Objective CAML, C# and Haskell, the F# language is not a pure functional language, but in comparison to Golang it __was__ designed to be a functional language on top of the .NET Framework. Additional to the functional aspects, F# also allows for object oriented and imperative programming (i.e. type-classes, for/while-loops). This allows for a full interoperability with Microsofts allaround object oriented C# programming language which preceeds F# by one year.
 
 === Functional programming in F#
 
-Functional programming in F# can easily started by creating a new console application with Microsofts Visual Studio IDE. Taking a lot from OCAML, F# syntax introduces recursive functions by using the keyword __rec__ infront of the functions name. Another example of syntax familarities is __match ... with ...__ which allows for implementing switch-case scenarios.
+One can easily get started with Functional programming in F# by downloading the .NET Framework from official Microsoft pages and creating a new console application with Microsofts Visual Studio IDE or with the __dotnet-cli__. Taking a lot from OCAML, F# syntax introduces recursive functions by using the keyword __rec__ infront of the functions name. Another example of syntax familarities is __match ... with ...__ which allows for implementing switch-case scenarios.
 
 [source, f#]
 ----
@@ -203,7 +203,7 @@ let rec test n =
     | x -> n + test (n-1)
 ----
 
-F# is more in line with the <<Functional languages ruleset>> as it introduces scope based variable imutability. On a module level, a __let__ declaritive must be unique, in a function scope multiple let assignments of the same variable name are allowed, however omitting the __let__-keyword produces an error since by default, all variables in F# are immutable.
+F# is more in line with the <<Functional languages ruleset>> as it introduces scope based variable imutability. On a module level (F# organises function-sets into modules, just like go), a __let__ declaritive must be unique, in a function scope multiple let assignments of the same variable name are allowed, however omitting the __let__-keyword produces a compiler error since by default, all variables in F# are immutable.
 [source, f#]
 ----
 // ex1:
@@ -219,7 +219,7 @@ let f x =
 	test1 * x // 8 * x
 ----
 
-While applying __ex2__ the declaration of the last let assignment of__test1__ inside the __f-function__ hides the value of all previous (same and outer scope) of the __test1__ variable. Since F# provides OO features, imutability becomes unhandy when dealing with objects. F# offers the keyword __mutable__. Using this allows the programmer to change the value of a already defined variable. So rewriting the the ex2 of the previous code snippet:
+While applying __ex2__ the declaration of the last let assignment of__test1__ inside the __f-function__ hides the value of all previous (same-level and outer scope) of the __test1__ variable, hence using the same variablename with a let-declaritive is not reasonable. Since F# provides OO features, imutability becomes unhandy when dealing with objects. F# offers the keyword __mutable__. Using this allows the programmer to change the value of a already defined variable. So rewriting the the ex2 of the previous code snippet results in:
 [source, f#]
 ----
 let f x = 
@@ -250,12 +250,14 @@ let fib_iter n =
         b <- temp + a
     printfn "%i" a
 
-// recursive
+// recursive, note again: this will take ages for higher indices...
 let rec fib_rec n = // recursive functions need to be declared with the 'rec' keyword
     match n with
     | 0 | 1 -> n
     | x -> fib_rec (x-1) + fib_rec (x-2)
 ----
+
+In conclusion, F# is a usefull, easy to get started with FP language, which provides everything necessary to do functional programming. Its interoperability with the .NET framework makes it possible to use almost the same, if not the same functionality scope as C#. As a result, writing entire http-webservers is possible using F#.
 
 ==== Closures, Composition and Currying
 Close to what Go offers, F# can produce function Closures, Composition and Currying as well.

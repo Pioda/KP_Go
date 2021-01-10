@@ -18,9 +18,6 @@ let closure n =
 let curried n = 
     fun c -> c + n 
 
-let mult n m = n*m
-
-
 let pow n = n * n
 let negate n = n * -1
 let pn = pow >> negate
